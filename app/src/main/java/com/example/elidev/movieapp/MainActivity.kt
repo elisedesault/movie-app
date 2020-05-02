@@ -3,16 +3,21 @@ package com.example.elidev.movieapp
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.elidev.movieapp.EndlessRecyclerviewScrollListener.OnLoadMoreListener
 import com.example.elidev.movieapp.api.PopularMoviesRequest
 import com.example.elidev.movieapp.api.PopularMoviesRequestCallbacks
 import com.example.elidev.movieapp.models.Movie
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), PopularMoviesRequestCallbacks, MoviesAdapter.OnMovieSelectedListener {
+class MainActivity : AppCompatActivity(),
+        PopularMoviesRequestCallbacks,
+        MoviesAdapter.OnMovieSelectedListener {
     private lateinit var compositeDisposable: CompositeDisposable
 
     private lateinit var moviesAdapter: MoviesAdapter
@@ -28,7 +33,6 @@ class MainActivity : AppCompatActivity(), PopularMoviesRequestCallbacks, MoviesA
         displayListTitle()
         loadMovies()
     }
-
     private fun displayListTitle() {
         supportActionBar?.title = resources.getString(R.string.popular_movies_title)
     }
@@ -49,16 +53,33 @@ class MainActivity : AppCompatActivity(), PopularMoviesRequestCallbacks, MoviesA
         rvMovies.layoutManager = linearLayoutManager
         moviesAdapter = MoviesAdapter(emptyList(), this)
         rvMovies.adapter = moviesAdapter
+        EndlessRecyclerviewScrollListener(object : OnLoadMoreListener {
+            override fun onLoadMore(page: Int, totalItemsCount: Int) {
+
+            }
+        })
     }
 
     private val MOVIE: String = "movie"
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_settings){
+            startActivity(Intent(this, SettingsActivity::class.java))
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onItemClick(movie: Movie) {
         val intent = Intent(this, MovieActivity::class.java)
         intent.putExtra(MOVIE, movie)
         startActivity(intent)
     }
-
 
     override fun onSuccess(list: List<Movie>) {
         moviesAdapter.updateList(list)
@@ -67,13 +88,4 @@ class MainActivity : AppCompatActivity(), PopularMoviesRequestCallbacks, MoviesA
     override fun onError() {
         Log.d(MainActivity::class.java.name, "An issue occurred while charging the list")
     }
-
-    //DONE 1- Create Movie data class with Room annotations
-    //DONE 2- Create MovieDao class to retrieve/register movie's details
-    //DONE 3- Create MovieDatabase class
-    //DONE 4- Make an item UI xml
-    //DONE 5- Make a list UI xml
-    //DONE 6- Display list from MainActivity thanks to a method that update the adapter in the callback method onSuccess()
-    //DONE 8- Retrieve each movie poster thanks to Picasso
-    //DONE 9- Bind the list item views with the data
 }

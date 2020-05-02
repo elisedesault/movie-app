@@ -1,9 +1,9 @@
 package com.example.elidev.movieapp
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.elidev.movieapp.MoviesAdapter.MovieViewHolder
 import com.example.elidev.movieapp.models.Movie
 import com.squareup.picasso.Picasso
@@ -26,11 +26,12 @@ class MoviesAdapter(private var movies: List<Movie>,
     }
 
     fun updateList(newList: List<Movie>) {
+
         movies = newList
         notifyDataSetChanged()
     }
 
-    class MovieViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val TAG: String = MoviesAdapter::class.java.simpleName
         private val FILE_SIZE: String? = "w500"
