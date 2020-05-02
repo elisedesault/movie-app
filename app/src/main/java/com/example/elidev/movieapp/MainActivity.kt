@@ -1,13 +1,11 @@
 package com.example.elidev.movieapp
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.elidev.movieapp.EndlessRecyclerviewScrollListener.OnLoadMoreListener
 import com.example.elidev.movieapp.api.PopularMoviesRequest
 import com.example.elidev.movieapp.api.PopularMoviesRequestCallbacks
@@ -22,7 +20,6 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var moviesAdapter: MoviesAdapter
 
-    private lateinit var linearLayoutManager: GridLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +30,7 @@ class MainActivity : AppCompatActivity(),
         displayListTitle()
         loadMovies()
     }
+
     private fun displayListTitle() {
         supportActionBar?.title = resources.getString(R.string.popular_movies_title)
     }
@@ -44,13 +42,6 @@ class MainActivity : AppCompatActivity(),
     private fun initRecyclerView() {
         rvMovies.setHasFixedSize(true)
 
-        if (this.applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            linearLayoutManager = GridLayoutManager(this, 2)
-        } else {
-            linearLayoutManager = GridLayoutManager(this, 4)
-        }
-
-        rvMovies.layoutManager = linearLayoutManager
         moviesAdapter = MoviesAdapter(emptyList(), this)
         rvMovies.adapter = moviesAdapter
         EndlessRecyclerviewScrollListener(object : OnLoadMoreListener {
@@ -68,7 +59,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_settings){
+        if (item.itemId == R.id.action_settings) {
             startActivity(Intent(this, SettingsActivity::class.java))
             return true
         }
