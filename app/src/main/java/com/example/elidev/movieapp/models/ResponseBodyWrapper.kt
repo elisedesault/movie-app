@@ -14,5 +14,4 @@ data class ResponseBodyWrapper<T>(
         @Json(name = "results") val result: List<T>,
         @Json(name = "total_results") val totalResults: Int,
         @Json(name = "total_pages") val totalPages: Int
-) {
-}
+)

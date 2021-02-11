@@ -5,4 +5,5 @@
     <string name="label_vote_average">Vote Average</string>
     <string name="label_vote_count">Vote Count</string>
     <string name="popular_movies_title">Popular Movies</string>
+    <string name="settings">Settings</string>
 </resources>
